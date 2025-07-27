@@ -178,7 +178,6 @@ from discord.app_commands import Choice
 async def like(interaction: discord.Interaction, uid: str, region: str):
     import aiohttp
 
-    # ✅ likesetup চেক
     if interaction.channel.id not in like_enabled_channels:
         await interaction.response.send_message("❌ এই চ্যানেলে `/likesetup` চালানো হয়নি। প্রথমে সেটআপ করুন।", ephemeral=True)
         return
@@ -208,7 +207,6 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                 likes_after = data.get("LikesafterCommand")
 
                 if status == 1:
-                    # ✅ Like success embed
                     info = (
                         f"```┌ FREE FIRE LIKE ADDED\n"
                         f"├─ Nickname: {nickname}\n"
@@ -217,6 +215,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                         f"└─ Likes After: {likes_after}\n"
                         f"UID: {uid}```"
                     )
+
                     embed = discord.Embed(
                         title="✅ Free Fire Like Added!",
                         description=info,
@@ -225,11 +224,21 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                     embed.set_thumbnail(url=interaction.user.display_avatar.url)
                     embed.set_image(url="https://i.imgur.com/ajygBes.gif")
                     embed.set_footer(text="📌 Dev </> GAMER SABBIR")
-                    await interaction.followup.send(embed=embed)
+
+                    # ✅ Color Text Block
+                    color_text = (
+                        "```diff\n"
+                        f"+ ✅ Like sent successfully!\n"
+                        f"+ UID: {uid}\n"
+                        f"+ Added: {likes_added} likes\n"
+                        f"+ Total Now: {likes_after} likes\n"
+                        "```"
+                    )
+
+                    await interaction.followup.send(embed=embed, content=color_text)
                     return
 
                 elif status == 2:
-                    # ⚠️ Max likes reached embed
                     embed = discord.Embed(
                         title="⚠️ No new likes were added",
                         description=(
@@ -243,7 +252,16 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                     )
                     embed.set_thumbnail(url=interaction.user.display_avatar.url)
                     embed.set_footer(text="📌 Dev </> GAMER SABBIR")
-                    await interaction.followup.send(embed=embed)
+
+                    color_text = (
+                        "```diff\n"
+                        "- ⚠️ Max likes reached today!\n"
+                        f"- UID: {uid}\n"
+                        f"- Total Likes: {likes_after}\n"
+                        "```"
+                    )
+
+                    await interaction.followup.send(embed=embed, content=color_text)
                     return
 
                 else:
