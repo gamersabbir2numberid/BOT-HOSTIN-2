@@ -162,7 +162,6 @@ async def help_command(interaction: discord.Interaction):
 
 
 # -------- /like --------
-## -------- /like --------
 @client.tree.command(name="like", description="Send like to Free Fire UID")
 @app_commands.describe(uid="Enter Free Fire UID", region="Enter Server Region (e.g. BD)")
 async def like(interaction: discord.Interaction, uid: str, region: str):
@@ -178,14 +177,10 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
 
     await interaction.response.defer()
 
-    url = f"https://like-api2-6p6g9zbth-gamersabbirs-projects.vercel.app/like?uid={uid}&server_name={region}"
-
-    cookies = {
-        '_vercel_jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJDUzZZUzg2aVY3VkRkWXQ3VVFSTTdraTEiLCJpYXQiOjE3NTM3MTU0NjQsIm93bmVySWQiOiJ0ZWFtX05IOFFhZ0VHQlYwdnZZUm4zUzJkZXJBVCIsImF1ZCI6Imxpa2UtYXBpMi02cDZnOXpidGgtZ2FtZXJzYWJiaXJzLXByb2plY3R0cy52ZXJjZWwuYXBwIiwidXNlcm5hbWUiOiJnYW1lcnNhYmJpciIsInN1YiI6InNzby1wcm90ZWN0aW9uIn0.-olYFDMKnbjuzGe5Pu0qs1asxMaEEZVFgAZtWfV0cys'
-    }
+    url = f"https://like-api2-xxx.vercel.app/like?uid={uid}&server_name={region}"
 
     try:
-        async with aiohttp.ClientSession(cookies=cookies) as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 if resp.status != 200:
                     await interaction.followup.send(f"❌ API returned bad status: {resp.status}")
@@ -195,7 +190,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
 
                 status = data.get("status")
                 nickname = data.get("PlayerNickname")
-                uid = data.get("UID")
+                uid_resp = data.get("UID")
                 likes_before = data.get("LikesbeforeCommand")
                 likes_added = data.get("LikesGivenByAPI")
                 likes_after = data.get("LikesafterCommand")
@@ -207,7 +202,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                         f"├─ Likes Before: {likes_before}\n"
                         f"├─ Likes Added: {likes_added}\n"
                         f"└─ Likes After: {likes_after}\n"
-                        f"UID: {uid}```"
+                        f"UID: {uid_resp}```"
                     )
 
                     embed = discord.Embed(
@@ -219,11 +214,10 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                     embed.set_image(url="https://i.imgur.com/ajygBes.gif")
                     embed.set_footer(text="📌 Dev </> GAMER SABBIR")
 
-                    # ✅ Color Text Block
                     color_text = (
                         "```diff\n"
                         f"+ ✅ Like sent successfully!\n"
-                        f"+ UID: {uid}\n"
+                        f"+ UID: {uid_resp}\n"
                         f"+ Added: {likes_added} likes\n"
                         f"+ Total Now: {likes_after} likes\n"
                         "```"
@@ -239,7 +233,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                             "**MAX LIKES REACHED TODAY**\n\n"
                             "This UID has already received the maximum likes today.\n\n"
                             f"**Nickname:** `{nickname}`\n"
-                            f"**UID:** `{uid}`\n"
+                            f"**UID:** `{uid_resp}`\n"
                             f"**Likes:** `{likes_after}`"
                         ),
                         color=discord.Color.orange()
@@ -250,7 +244,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
                     color_text = (
                         "```diff\n"
                         "- ⚠️ Max likes reached today!\n"
-                        f"- UID: {uid}\n"
+                        f"- UID: {uid_resp}\n"
                         f"- Total Likes: {likes_after}\n"
                         "```"
                     )
@@ -266,6 +260,7 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
         if len(short_error) > 1900:
             short_error = short_error[:1900] + "..."
         await interaction.followup.send(f"❌ Error:\n```{short_error}```", ephemeral=True)
+
 
 # -------- /check --------
 @client.tree.command(name="check", description="Check Free Fire ID ban status")
