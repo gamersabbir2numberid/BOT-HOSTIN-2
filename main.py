@@ -162,8 +162,19 @@ async def help_command(interaction: discord.Interaction):
 
 
 # -------- /like --------
+from discord import app_commands
+from discord.app_commands import Choice
+
 @client.tree.command(name="like", description="Send like to Free Fire UID")
-@app_commands.describe(uid="Enter Free Fire UID", region="Enter Server Region (e.g. BD)")
+@app_commands.describe(
+    uid="Enter Free Fire UID",
+    region="Choose your server region"
+)
+@app_commands.choices(region=[
+    Choice(name="🇧🇩 Bangladesh", value="BD"),
+    Choice(name="🇮🇳 India", value="IND"),
+    Choice(name="🇵🇰 Pakistan", value="PK")
+])
 async def like(interaction: discord.Interaction, uid: str, region: str):
     import aiohttp
 
