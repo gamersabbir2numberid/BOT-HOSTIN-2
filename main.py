@@ -162,7 +162,7 @@ async def help_command(interaction: discord.Interaction):
 
 
 # -------- /like --------
-# -------- /like --------
+## -------- /like --------
 @client.tree.command(name="like", description="Send like to Free Fire UID")
 @app_commands.describe(uid="Enter Free Fire UID", region="Enter Server Region (e.g. BD)")
 async def like(interaction: discord.Interaction, uid: str, region: str):
@@ -178,22 +178,14 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
 
     await interaction.response.defer()
 
+    url = f"https://like-api2-6p6g9zbth-gamersabbirs-projects.vercel.app/like?uid={uid}&server_name={region}"
 
-
-
-url = "https://like-api2-6p6g9zbth-gamersabbirs-projects.vercel.app/like?uid=8077742372&server_name=BD"
-
-cookies = {
-    '_vercel_jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJDUzZZUzg2aVY3VkRkWXQ3VVFSTTdraTEiLCJpYXQiOjE3NTM3MTU0NjQsIm93bmVySWQiOiJ0ZWFtX05IOFFhZ0VHQlYwdnZZUm4zUzJkZXJBVCIsImF1ZCI6Imxpa2UtYXBpMi02cDZnOXpidGgtZ2FtZXJzYWJiaXJzLXByb2plY3R0cy52ZXJjZWwuYXBwIiwidXNlcm5hbWUiOiJnYW1lcnNhYmJpciIsInN1YiI6InNzby1wcm90ZWN0aW9uIn0.-olYFDMKnbjuzGe5Pu0qs1asxMaEEZVFgAZtWfV0cys'
-}
-
-response = requests.get(url, cookies=cookies)
-
-print(response.status_code)
-print(response.json())
+    cookies = {
+        '_vercel_jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJDUzZZUzg2aVY3VkRkWXQ3VVFSTTdraTEiLCJpYXQiOjE3NTM3MTU0NjQsIm93bmVySWQiOiJ0ZWFtX05IOFFhZ0VHQlYwdnZZUm4zUzJkZXJBVCIsImF1ZCI6Imxpa2UtYXBpMi02cDZnOXpidGgtZ2FtZXJzYWJiaXJzLXByb2plY3R0cy52ZXJjZWwuYXBwIiwidXNlcm5hbWUiOiJnYW1lcnNhYmJpciIsInN1YiI6InNzby1wcm90ZWN0aW9uIn0.-olYFDMKnbjuzGe5Pu0qs1asxMaEEZVFgAZtWfV0cys'
+    }
 
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(cookies=cookies) as session:
             async with session.get(url, timeout=10) as resp:
                 if resp.status != 200:
                     await interaction.followup.send(f"❌ API returned bad status: {resp.status}")
