@@ -188,8 +188,8 @@ async def like(interaction: discord.Interaction, uid: str, region: str):
 
     await interaction.response.defer()
 
-    url = f"https://like-api2-jult9y588-gamersabbirs-projects.vercel.app/{uid}&server_name={region}"
-    
+    url = f"https://like-api2-jult9y588-gamersabbirs-projects.vercel.app/like?uid={uid}&server_name={region}"
+
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
